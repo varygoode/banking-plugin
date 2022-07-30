@@ -260,7 +260,7 @@ namespace Oxide.Plugins
 
                     if (!EditAccount(editAccount, field, args[3]))
                     {
-                        iPlayer.Reply(Lang("Account_Edit_Failure", iPlayer.Id, command, editAccount.AccountID));
+                        iPlayer.Reply(Lang("Account_Edit_Failure", iPlayer.Id, editAccount.AccountID));
                         return;
                     }
 
@@ -775,6 +775,19 @@ namespace Oxide.Plugins
         #endregion Methods
 
         #region API
+
+        private bool Withdraw(double id, double amt, string reason)
+        {
+            Account withdrawAcct = FindAccountWithID(id.ToString());
+
+            if (withdrawAcct == null || withdrawAcct.IsFrozen || withdrawAcct.Balance < amt) return false;
+
+            withdrawAcct.Withdraw(amt, reason);
+
+            return true;
+        }
+
+        private bool Withdraw(double id, double amt) => Withdraw(id, amt, "COIN WITHDRAWAL");
 
         #endregion API
 
